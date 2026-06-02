@@ -3,16 +3,16 @@ import { pool } from '../db.js'
 
 export const get_ini=async (req,res)=>{
     try{
-        const [rows]=await pool.query("select nom_prg, nom_prd, nom_act, nom_sub, sum(meta_fisica) as meta from metas_fisicas group by nom_prg, nom_prd, nom_act, nom_sub order by nom_prg, nom_prd, nom_act, nom_sub");
+        const [rows]=await pool.query("select nom_prg, nom_prd, nom_act, nom_sub, unidad, format(sum(meta_fisica),0) as meta from metas_fisicas group by nom_prg, nom_prd, nom_act, nom_sub, unidad order by nom_prg, nom_prd, nom_act, nom_sub");
         res.json(rows);
     }catch(error){
         return res.status(500).json({mensaje:'ocurrio un error'});
     }
 }
 
-export const get_prog=async (req,res)=>{
+export const programas=async (req,res)=>{
     try{
-        const [rows]=await pool.query("select distinct(cod_prg), nom_prg from ktx");
+        const [rows]=await pool.query("select distinct(cod_prg), nom_prg from metas_fisicas");
         res.json(rows);
     }catch(error){
         return res.status(500).json({mensaje:'ocurrio un error'});
