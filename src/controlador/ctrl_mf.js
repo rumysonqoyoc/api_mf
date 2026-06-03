@@ -56,6 +56,15 @@ export const por_programa_micro=async (req,res)=>{
     }
 }
 
+export const por_producto_micro=async (req,res)=>{
+    try{
+        const [rows]=await pool.query("select mf.nom_prd, mf.nom_act, mf.nom_sub, mr.nom_micro, mf.unidad, format(sum(mf.meta_fisica),0) as meta from metas_fisicas mf, micro_red mr, eess est where mf.cod_eess=est.cod_eess and est.cod_micro = mr.cod_micro and mf.cod_prg=? and cod_prd=? group by mf.nom_prd, mf.nom_act, mf.nom_sub, mr.nom_micro, mf.unidad order by mf.nom_prd, mf.nom_act, mf.nom_sub, meta desc", [req.params.prg, req.params.prd])
+        res.json(rows);
+    }catch(error){
+        return res.status(500).json({mensaje:'ocurrio un error'});
+    }
+}
+
 
 export const get_prod=async (req,res)=>{
     try{
