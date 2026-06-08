@@ -109,3 +109,40 @@ export const eess_micro=async (req,res)=>{
         return res.status(500).json({mensaje:'ocurrio un error'});
     }
 }
+
+export const graf_producto_micro=async (req,res)=>{
+    try{
+        const [rows]=await pool.query("select mr.nom_micro, sum(mf.meta_fisica) as meta from metas_fisicas mf, micro_red mr, eess est where mf.cod_eess=est.cod_eess and est.cod_micro=mr.cod_micro and mf.cod_prg=? and mf.cod_prd=? group by mr.nom_micro, mf.nom_prd order by sum(mf.meta_fisica) desc ", [req.params.prg, req.params.prd])
+        res.json(rows);
+    }catch(error){
+        return res.status(500).json({mensaje:'ocurrio un error'});
+    }
+}
+
+export const graf_sub_producto_micro=async (req,res)=>{
+    try{
+        const [rows]=await pool.query("select mr.nom_micro, sum(mf.meta_fisica) as meta from metas_fisicas mf, micro_red mr, eess est where mf.cod_eess=est.cod_eess and est.cod_micro=mr.cod_micro and mf.cod_prg=? and mf.cod_prd=? and mf.cod_sub=? group by mr.nom_micro, mf.nom_prd order by sum(mf.meta_fisica) desc ", [req.params.prg, req.params.prd, req.params.sub])
+        res.json(rows);
+    }catch(error){
+        return res.status(500).json({mensaje:'ocurrio un error'});
+    }
+}
+
+
+export const graf_producto_eess=async (req,res)=>{
+    try{
+        const [rows]=await pool.query("select est.nom_eess, sum(mf.meta_fisica) as meta from metas_fisicas mf, micro_red mr, eess est where mf.cod_eess=est.cod_eess and est.cod_micro=mr.cod_micro and mf.cod_prg=? and mf.cod_prd=? and mr.cod_micro=? group by est.nom_eess order by sum(mf.meta_fisica) desc", [req.params.prg, req.params.prd, req.params.mic])
+        res.json(rows);
+    }catch(error){
+        return res.status(500).json({mensaje:'ocurrio un error'});
+    }
+}
+
+export const graf_sub_producto_eess=async (req,res)=>{
+    try{
+        const [rows]=await pool.query("select est.nom_eess, sum(mf.meta_fisica) as meta from metas_fisicas mf, micro_red mr, eess est where mf.cod_eess=est.cod_eess and est.cod_micro=mr.cod_micro and mf.cod_prg=? and mf.cod_prd=? and mf.cod_sub=? and mr.cod_micro=? group by est.nom_eess order by sum(mf.meta_fisica) desc", [req.params.prg, req.params.prd, req.params.sub, req.params.mic])
+        res.json(rows);
+    }catch(error){
+        return res.status(500).json({mensaje:'ocurrio un error'});
+    }
+}
